@@ -32,7 +32,7 @@ fun BooksApp() {
             val booksViewModel: BooksViewModel = viewModel()
             HomeScreen(
                 booksUiState = booksViewModel.booksUiState,
-                retryAction = booksViewModel::getBooks
+                contentPadding = it
             )
         }
     }
