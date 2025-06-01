@@ -1,6 +1,6 @@
 package com.example.books.model
 
-data class BooksApiResponse(
+data class BookApiResponse(
     val items: List<BookItem>?
 )
 

@@ -27,7 +27,7 @@ fun BooksApp() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            val booksViewModel: BooksViewModel = viewModel()
+            val booksViewModel: BookViewModel = viewModel()
             HomeScreen(
                 booksUiState = booksViewModel.booksUiState,
                 contentPadding = it
