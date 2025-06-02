@@ -19,8 +19,17 @@ class BookViewModel @Inject constructor(
     private val _state = MutableStateFlow(BookUiState())
     val state: StateFlow<BookUiState> = _state
 
+    var currentQuery = "jazz history"
+    private set
+
+    // search query for search bar
+    fun updateQuery(query: String) {
+        currentQuery = query
+        loadBooks(query)
+    }
+
     // function to get book eg Jazz history
-    fun loadBooks(query: String = "jazz history") {
+    fun loadBooks(query: String = currentQuery) {
         _state.value = BookUiState(isLoading = true)
 
         viewModelScope.launch {
@@ -66,24 +75,3 @@ data class BookUiState (
     val error: String? = null
 )
 
-
-
-//    /** The mutable State that stores the status of the most recent request */
-//    var booksUiState: String by mutableStateOf("")
-//        private set
-//
-//    /**
-//     * Call getBooks() on init so we can display status immediately.
-//     */
-//    init {
-//        getBooks()
-//    }
-//
-//    /**
-//     * Get Books information from the Books API Retrofit service and update the
-//     * [Books] [List] [MutableList]
-//     */
-//
-//    fun getBooks() {
-//        booksUiState = "Set the Books API status response here!"
-//    }
