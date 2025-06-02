@@ -1,5 +1,7 @@
 package com.example.books.ui.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,9 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,11 +25,19 @@ import com.example.books.ui.theme.BooksTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.books.R
 import com.example.books.model.BookItem
 import com.example.books.model.ImageLinks
 import com.example.books.model.VolumeInfo
@@ -61,19 +73,52 @@ fun BookDetailScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(info?.imageLinks?.thumbnail ?: "")
-                .crossfade(true)
-                .build(),
-            contentDescription = info?.title,
-            contentScale = ContentScale.FillWidth,
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
-        )
+                .height(300.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            // Blurred background image
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(info?.imageLinks?.thumbnail ?: "")
+                    .crossfade(true)
+                    .build(),
+                contentDescription = info?.title,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(
+                        radiusX = 10.dp,
+                        radiusY = 10.dp,
+                        edgeTreatment = BlurredEdgeTreatment.Unbounded
+                    )
+            )
+            // Foreground image
+            Box(
+                modifier = Modifier
+                    .offset(y = 75.dp)
+                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .shadow(8.dp)
+                    .width(150.dp)
+                    .height(250.dp)
+                    .zIndex(1f)
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data(info?.imageLinks?.thumbnail ?: "")
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = info?.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
             text = info?.title ?: "Unknown Tille",
@@ -131,19 +176,46 @@ fun BookDetailContent(book: BookItem) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-                .data(info?.imageLinks?.thumbnail ?: "")
-                .crossfade(true)
-                .build(),
-            contentDescription = info?.title,
-            contentScale = ContentScale.FillWidth,
+        Box(
             modifier = Modifier
-                .width(150.dp)
-                .height(250.dp)
-        )
+                .fillMaxWidth()
+                .height(300.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            // Blurred background image
+            Image(
+                painter = painterResource(R.drawable.the_island),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(
+                        radiusX = 10.dp,
+                        radiusY = 10.dp,
+                        edgeTreatment = BlurredEdgeTreatment.Unbounded
+                    )
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            // Foreground image wrapped in an isolated Box
+            Box(
+                modifier = Modifier
+                    .offset(y = 75.dp)
+                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .shadow(8.dp)
+                    .width(150.dp)
+                    .height(250.dp)
+                    .zIndex(1f) // ensures it's drawn above the background
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.the_island),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
             text = info?.title ?: "Unknown Title",
@@ -204,7 +276,7 @@ fun BookDetailPreview() {
             averageRating = 4,
             ratingsCount = 100,
             imageLinks = ImageLinks(
-                smallThumbnail = "https://via.placeholder.com/150",
+                smallThumbnail = "https://unsplash.com/photos/a-stack-of-books-f80d5O78Bmo",
                 thumbnail = "https://via.placeholder.com/150"
             ),
             language = "en"
