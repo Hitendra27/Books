@@ -90,6 +90,9 @@ dependencies {
     // Kotlinx Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+    // Animations
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.33.2-alpha")
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -14,13 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import com.example.books.R
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 sealed class Screen(
     val route: String,
@@ -30,11 +32,11 @@ sealed class Screen(
     object Detail : Screen("details", "Details")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun BookApp() {
     val viewModel: BookViewModel = viewModel()
-    val navController = rememberNavController()
+    val navController = rememberAnimatedNavController()
     val currentDestination by navController.currentBackStackEntryAsState()
 
     Scaffold(
@@ -64,9 +66,19 @@ fun BookApp() {
             )
                 }
     ) { innerPadding ->
-        NavHost(
+        AnimatedNavHost(
             navController = navController,
             startDestination = Screen.List.route,
+            enterTransition = {
+                slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(500)) + fadeIn()
+            },
+            exitTransition = {
+                slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = tween(500)) + fadeOut()
+            },
+            // enterTransition = { fadeIn(animationSpec = tween(500)) },
+           // exitTransition = { fadeOut(animationSpec = tween(300)) },
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { -300 }) + fadeIn() },
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { 300 }) + fadeOut() },
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.List.route) {
