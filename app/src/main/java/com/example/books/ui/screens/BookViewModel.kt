@@ -19,7 +19,7 @@ class BookViewModel @Inject constructor(
     private val _state = MutableStateFlow(BookUiState())
     val state: StateFlow<BookUiState> = _state
 
-    var currentQuery = "jazz history"
+    var currentQuery = "search books"
     private set
 
     // search query for search bar

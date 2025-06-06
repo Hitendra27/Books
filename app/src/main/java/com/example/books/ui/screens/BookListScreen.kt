@@ -104,35 +104,39 @@ fun BookListScreen(
     }
 }
 
-
-
     @Composable
     fun BookCard(
         photo: BookItem,
         modifier: Modifier = Modifier,
         onClick: () -> Unit
     ) {
+        val imageUrl = photo.volumeInfo?.imageLinks?.thumbnail?.replace("http://", "https://")
+
         Card(
             modifier = modifier
                 .clickable { onClick()}
-                .padding(4.dp),
+                .padding(4.dp)
+                .fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
+
             AsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(photo.volumeInfo?.imageLinks?.thumbnail)
+                    .data(imageUrl)
                     .crossfade(true)
                     .build(),
                 contentDescription = photo.volumeInfo?.title,
-                contentScale = ContentScale.None,
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .aspectRatio(0.75f)
             )
+
             Text(
                 text = photo.volumeInfo?.title ?: "No Title",
                 modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1
             )
         }
     }

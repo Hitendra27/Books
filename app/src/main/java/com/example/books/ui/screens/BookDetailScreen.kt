@@ -65,6 +65,7 @@ fun BookDetailScreen(
     }
 
     val info = selectedBook.volumeInfo
+    val imageUrl = info?.imageLinks?.thumbnail?.replace("http://", "https://") ?: ""
 
     Column(
         modifier = Modifier
@@ -82,7 +83,7 @@ fun BookDetailScreen(
             // Blurred background image
             AsyncImage(
                 model = ImageRequest.Builder(context = LocalContext.current)
-                    .data(info?.imageLinks?.thumbnail ?: "")
+                    .data(imageUrl)
                     .crossfade(true)
                     .build(),
                 contentDescription = info?.title,
@@ -107,11 +108,11 @@ fun BookDetailScreen(
             ) {
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
-                        .data(info?.imageLinks?.thumbnail ?: "")
+                        .data(imageUrl)
                         .crossfade(true)
                         .build(),
                     contentDescription = info?.title,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.FillBounds,
                     modifier = Modifier
                         .fillMaxSize()
                 )
@@ -123,6 +124,7 @@ fun BookDetailScreen(
         Text(
             text = info?.title ?: "Unknown Tille",
             style = MaterialTheme.typography.titleMedium,
+            maxLines = 1,
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
@@ -153,7 +155,7 @@ fun BookDetailScreen(
 
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Text(
             text = "${info?.description}",
